@@ -11,18 +11,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-var (
-	redisAddr string
-)
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err);
-	}
-	redisAddr = os.GetEnv("REDIS_ADDR")
-}
-
 func main() {
 	db, err := database.InitDB()
 	if err != nil {
@@ -31,7 +19,7 @@ func main() {
 	defer db.Close()
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr: redisAddr,
+		Addr: "localhost:6379",
 	})
 
 	app := fiber.New()
