@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -18,13 +19,17 @@ func InitDB() (*DB, error) {
 
 	session, err := cluster.CreateSession()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create session: %v", err)
 	}
 
 	db := &DB{Session: session}
 
+	if err := db.Session.Query("SELECT release_version FROM system.local").Exec(); err != nil {
+		return nil, fmt.Errorf("failed to execute test query: %v", err)
+	}
+
 	if err := CreateTables(db); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create tables: %v", err)
 	}
 
 	return db, nil

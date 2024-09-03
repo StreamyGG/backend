@@ -10,6 +10,10 @@ import (
 func SetupAuthRoutes(app *fiber.App, db *database.DB) {
 	router := app.Group("/auth")
 
-	router.Post("/login", auth.Login)
-	router.Post("/register", auth.Register)
+	router.Post("/login", func(c *fiber.Ctx) error {
+		return auth.Login(c, db)
+	})
+	router.Post("/register", func(c *fiber.Ctx) error {
+		return auth.Register(c, db)
+	})
 }
